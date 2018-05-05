@@ -1,1 +1,1 @@
-web: python LittlePancakeBot.py
+worker: python LittlePancakeBot.py
