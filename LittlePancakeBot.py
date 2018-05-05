@@ -24,7 +24,7 @@ async def on_ready():
 
 @client.event
 async def on_member_join(member):
-	await client.send_message(Server.default_channel, "Welcome, " + member.nick + ":yayshark:")
+	await client.send_message(member.server.default_channel, "Welcome, " + member.nick + ":yayshark:")
 
 @client.event
 async def on_message(message):
