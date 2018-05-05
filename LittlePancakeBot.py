@@ -8,7 +8,6 @@ import time
 	
 import bs4 as bs
 from urllib import request as uRequest
-import requests
 
 translate = {"ロイヤル":"Sword", "ウィッチ":"Rune", "ネメシス":"Portal", "ビショップ":"Haven", 
 			 "ヴァンパイア":"Blood", "ドラゴン":"Dragon", "エルフ":"Forest", "ネクロマンサー":"Shadow"}
