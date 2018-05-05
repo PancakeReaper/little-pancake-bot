@@ -24,7 +24,7 @@ async def on_ready():
 
 @client.event
 async def on_member_join(member):
-	await client.send_message(member.server.default_channel, "Welcome, " + str(member.name) + " <:smug:442416300170412062>")
+	await client.send_message(member.server.default_channel, "Welcome, " + str(member.name) + " <:yayshark:327870025878732800>")
 
 @client.event
 async def on_message(message):
@@ -165,7 +165,7 @@ async def on_message(message):
 		await client.send_message(message.channel, t)
 
 	elif message.content.startswith("Who's the best shadowverse player"):
-		await client.send_message(message.channel, "Why " + os.environ.get("BEST_PLAYER") + " of course :smug:")
+		await client.send_message(message.channel, "Why " + os.environ.get("BEST_PLAYER") + " of course <:smug:302980339444350976>")
 
 def getShadowlogMessage(data, target=""):
 	if target != "":
