@@ -25,6 +25,10 @@ async def on_ready():
 @client.event
 async def on_member_join(member):
 	await client.send_message(member.server.default_channel, "Welcome, " + str(member.name) + " <:yayshark:327870025878732800>")
+	
+@client.event
+async def on_member_remove(member):
+	await client.send_message(member.server.default_channel, str(member.name) + " has left the server <:thesaddest:357950212096131072>")
 
 @client.event
 async def on_message(message):
