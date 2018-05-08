@@ -65,6 +65,9 @@ async def on_message(message):
 				await client.send_message(message.channel, "You rolled " + str(randint(0, maxrand)))
 		except:
 			await client.send_message(message.channel, "You rolled " + str(randint(0, 100)))
+			
+	elif message.content.startswith(">which class"):
+		await client.send_message(message.channel, "You should choose " + choice(["the 1st one", "the 2nd one", "the 3rd one"]))
 
 	elif message.content.startswith(">left or right") or message.content.startswith(">right or left"):
 		await client.send_message(message.channel, "You should choose " + choice(["Left", "Right"]))
