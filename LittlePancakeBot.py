@@ -66,8 +66,8 @@ async def on_message(message):
 		except:
 			await client.send_message(message.channel, "You rolled " + str(randint(0, 100)))
 
-	elif message.content.startswith(">left or right"):
-		await client.send_message(message.channel, "You flipped a " + choice(["Left.", "Right."]))
+	elif message.content.startswith(">left or right") or message.content.startswith(">right or left"):
+		await client.send_message(message.channel, "You should choose " + choice(["Left", "Right"]))
 
 	elif message.content.startswith(">anime random"):
 		randomNumber = randint(0, 1499)
