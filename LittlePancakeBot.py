@@ -45,7 +45,8 @@ async def on_message(message):
 			"```" +
 			"\n>roll (Rolls a random number between 0 and 100" + 
 			"\n>roll x (Rolls a random number between 0 and x)" +
-			"\n>flip (Flips a coin)" + 
+			"\n>left or right (Greatly improves your T2 skill, include a ss for better results)" + 
+			"\n>8ball (Will answer a yes or no question with blistering accuracy)" +
 			"\n>shadowlog (grabs relevant data from shadowlog, can specify class and/or format)" +
 			"\n    eg. >shadowlog forest (Grabs Forest's stats in rotation)" +
 			"\n        >shadowlog sword unlimited (Grabs Sword's stats in unlimited)" + 
@@ -65,8 +66,8 @@ async def on_message(message):
 		except:
 			await client.send_message(message.channel, "You rolled " + str(randint(0, 100)))
 
-	elif message.content.startswith(">flip"):
-		await client.send_message(message.channel, "You flipped a " + choice(["Heads.", "Tails."]))
+	elif message.content.startswith(">left or right"):
+		await client.send_message(message.channel, "You flipped a " + choice(["Left.", "Right."]))
 
 	elif message.content.startswith(">anime random"):
 		randomNumber = randint(0, 1499)
