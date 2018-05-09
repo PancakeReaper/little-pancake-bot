@@ -13,8 +13,8 @@ translate = {"ロイヤル":"Sword", "ウィッチ":"Rune", "ネメシス":"Port
 			 "ヴァンパイア":"Blood", "ドラゴン":"Dragon", "エルフ":"Forest", "ネクロマンサー":"Shadow"}
 
 eightBall = ["It is certain", "It is decidedly so", "Without a doubt", "Yes definitely", "As I see it, yes", 
-	    "Most likely", "Yes", "Signs point to yes", "Reply hazy try again", "Better not tell you now", 
-	     "Cannot predict now", "Concentrate and ask again", "Don't count on it", "My reply is no", "My sources say no", 
+	    "Most likely", "Yes", "The answer is exactly what you think it is", "Signs point to a yes", "Better not tell you now", 
+	     "That is up for you to decide", "I don't think you should know", "Don't count on it", "My reply is no", "My sources say no", 
 	     "Unlikely", "Very doubtful", "No", "Signs point to no", "Not a chance"]
 
 client = discord.Client()
@@ -45,7 +45,7 @@ async def on_message(message):
 			"```" +
 			"\n>roll (Rolls a random number between 0 and 100" + 
 			"\n>roll x (Rolls a random number between 0 and x)" +
-			"\n>left or right (Greatly improves your T2 skill, include a ss for better results)" + 
+			"\n>left or right (Greatly improves your T2 skill, screenshot optional)" + 
 			"\n>8ball (Will answer a yes or no question with blistering accuracy)" +
 			"\n>shadowlog (grabs relevant data from shadowlog, can specify class and/or format)" +
 			"\n    eg. >shadowlog forest (Grabs Forest's stats in rotation)" +
