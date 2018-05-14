@@ -24,65 +24,61 @@ async def on_ready():
 	print("Logged in as")
 	print(client.user.name)
 	print(client.user.id)
-	print('------')
-	client.change_presence(game=discord.Game(name=">help"))
+	print('--------')
+	client.change_presence(game=discord.Game(type=0, name=">help"))
 
 @client.event
 async def on_member_join(member):
-	await client.send_message(member.server.default_channel, "Welcome, " + str(member.name) + " <:yayshark:327870025878732800>")
+	await sendEmbed(member.server.default_channel, "Welcome, " + str(member.name) + " <:yayshark:327870025878732800>")
 	
 @client.event
 async def on_member_remove(member):
-	await client.send_message(member.server.default_channel, str(member.name) + " has left the server <:thesaddest:357950212096131072>")
+	await sendEmbed(member.server.default_channel, str(member.name) + " has left the server <:thesaddest:357950212096131072>")
 
 @client.event
 async def on_message(message):
 	if message.content.startswith(">hello"):
-		await client.send_message(message.channel, "Good day.")
+		await sendEmbed(message.channel, "Good day.")
 
 	elif message.content.startswith(">help"):
-		await client.send_message(message.channel,
-			"```" +
-			"\n>roll (Rolls a random number between 0 and 100" + 
+		await sendEmbed(message.channel, mainTitle="List of Commands:", desc="\n>roll (Rolls a random number between 0 and 100" + 
 			"\n>roll x (Rolls a random number between 0 and x)" +
-			"\n>left or right (Greatly improves your T2 skill, screenshot optional)" + 
 			"\n>8ball (Will answer a yes or no question with blistering accuracy)" +
-			"\n>shadowlog (grabs relevant data from shadowlog, can specify class and/or format)" +
+			"\n\n>left or right (Greatly improves your T2 skill, screenshot optional)" + 
+			"\n>which class (If you need help deciding which class to play on T2)" +
+			"\n\n>shadowlog (grabs relevant data from shadowlog, can specify class and/or format)" +
 			"\n    eg. >shadowlog forest (Grabs Forest's stats in rotation)" +
 			"\n        >shadowlog sword unlimited (Grabs Sword's stats in unlimited)" + 
-			"\n        >shadowlog unlimited (Grabs all relevant data in unlimited)" +
-			"\n>anime (Searches MAL for specified anime)" + 
+			"\n        >shadowlog unlimited (Grabs all relevant stats in unlimited)" +
+			"\n\n>anime (Searches MAL for specified anime)" + 
 			"\n>anime tv (For only TV search)" +
 			"\n>anime movie (For only movie search)" +
 			"\n>anime random (Grabs a random anime out of the best 1500 on MAL)" +
 			"\n>manga (Searches MAL for specified manga)" +
-			"\n>manga random (Grabs a random manga out of the best 1000 on MAL)" + "\n```")
+			"\n>manga random (Grabs a random manga out of the best 1000 on MAL)", footer=True)
 
 	elif message.content.startswith(">roll"):
 		try:
 			maxrand = int(message.content[6:])
 			if maxrand > 0:
-				await client.send_message(message.channel, "You rolled " + str(randint(0, maxrand)))
+				await sendEmbed(message.channel, desc="You rolled " + str(randint(0, maxrand)))
 		except:
-			await client.send_message(message.channel, "You rolled " + str(randint(0, 100)))
+			await sendEmbed(message.channel, desc="You rolled " + str(randint(0, 100)))
 			
 	elif message.content.startswith(">which class"):
-		await client.send_message(message.channel, "You should choose " + choice(["the 1st one", "the 2nd one", "the 3rd one"]))
+		await sendEmbed(message.channel, desc="You should choose " + choice(["the 1st one", "the 2nd one", "the 3rd one"]))
 
 	elif message.content.startswith(">left or right") or message.content.startswith(">right or left"):
-		await client.send_message(message.channel, "You should choose " + choice(["Left", "Right"]))
-
-	elif message.content.startswith(">anime random"):
-		randomNumber = randint(0, 1499)
-		uClient = uRequest.urlopen("https://myanimelist.net/topanime.php?limit=" + str(randomNumber))
-		sauce = uClient.read()
-		uClient.close()
-		soup_page = bs.BeautifulSoup(sauce, 'html.parser')
-
-		anime = soup_page.find('a', class_="hoverinfo_trigger fl-l fs14 fw-b")
-		await client.send_message(message.channel, anime['href'])
+		await sendEmbed(message.channel, desc="You should choose " + choice(["Left", "Right"]))
 
 	elif message.content.startswith(">anime "):
+		if message.content.startswith(">anime random"):
+			randomNumber = randint(0, 1499)
+			soup_page = getSoup("https://myanimelist.net/topanime.php?limit=" + str(randomNumber))
+
+			anime = soup_page.find('a', class_="hoverinfo_trigger fl-l fs14 fw-b")
+			await client.send_message(message.channel, anime['href'])
+			return
 
 		if message.content.startswith(">anime movie "):
 			search = message.content[13:]
@@ -95,14 +91,11 @@ async def on_message(message):
 			searchType = "" 
 
 		if(search == ""):
-			await client.send_message(message.channel, "Please add a search term at the end.")
+			await sendEmbed(message.channel, desc="Please add a search term at the end.")
 			return
 
 		search.replace(" ", "%20")
-		uClient = uRequest.urlopen("https://myanimelist.net/anime.php?q=" + search + searchType)
-		sauce = uClient.read()
-		uClient.close()
-		soup_page = bs.BeautifulSoup(sauce, 'html.parser')
+		soup_page = getSoup("https://myanimelist.net/anime.php?q=" + search + searchType)
 
 		anime = soup_page.find('a', class_="hoverinfo_trigger fw-b fl-l")
 		await client.send_message(message.channel, anime['href'])
@@ -110,10 +103,7 @@ async def on_message(message):
 	elif message.content.startswith(">manga "):
 		if message.content.startswith(">manga random"):
 			randomNumber = randint(0, 1000)
-			uClient = uRequest.urlopen("https://myanimelist.net/topmanga.php?limit=" + str(randomNumber))
-			sauce = uClient.read()
-			uClient.close()
-			soup_page = bs.BeautifulSoup(sauce, 'html.parser')
+			soup_page = getSoup("https://myanimelist.net/topmanga.php?limit=" + str(randomNumber))
 
 			manga = soup_page.find('a', class_="hoverinfo_trigger fs14 fw-b")
 			await client.send_message(message.channel, manga['href'])
@@ -121,14 +111,11 @@ async def on_message(message):
 			search = message.content[7:]
 
 			if search == "":
-				await client.send_message(message.channel, "Please add a search term at the end.")
+				await sendEmbed(message.channel, desc="Please add a search term at the end.")
 				return
 
 			search.replace(" ", "%20")
-			uClient = uRequest.urlopen("https://myanimelist.net/manga.php?q=" + search)
-			sauce = uClient.read()
-			uClient.close()
-			soup_page = bs.BeautifulSoup(sauce, 'html.parser')
+			soup_page = getSoup("https://myanimelist.net/manga.php?q=" + search)
 
 			manga = soup_page.find('a', class_="hoverinfo_trigger fw-b")
 			await client.send_message(message.channel, manga['href'])
@@ -138,10 +125,7 @@ async def on_message(message):
 		if "unlimited" in message.content:
 			r = ""
 		week = int(time.strftime("%W", time.gmtime()))-1
-		uClient = uRequest.urlopen("https://shadowlog.com/trend/2018/" + str(week) + "/4/" + r)
-		sauce = uClient.read()
-		uClient.close()
-		soup_page = bs.BeautifulSoup(sauce, 'html.parser')
+		soup_page = getSoup("https://shadowlog.com/trend/2018/" + str(week) + "/4/" + r)
 
 		data = []
 		table = soup_page.find("table", id="table1")
@@ -156,42 +140,63 @@ async def on_message(message):
 				data[i].append(col.text)
 			i+=1
 
-		t = "```\n"
 		if " sword" in message.content:
-			t += getShadowlogMessage(data, "Sword") + "\n```"
+			await sendShadowlogMessage(message, data, "Sword") + "\n```"
 		elif " rune" in message.content:
-			t += getShadowlogMessage(data, "Rune") + "\n```"
+			await sendShadowlogMessage(message, data, "Rune") + "\n```"
 		elif " portal" in message.content:
-			t += getShadowlogMessage(data, "Portal") + "\n```"
+			await sendShadowlogMessage(message, data, "Portal") + "\n```"
 		elif " haven" in message.content:
-			t += getShadowlogMessage(data, "Haven") + "\n```"
+			await sendShadowlogMessage(message, data, "Haven") + "\n```"
 		elif " blood" in message.content:
-			t += getShadowlogMessage(data, "Blood") + "\n```"
+			await sendShadowlogMessage(message, data, "Blood") + "\n```"
 		elif " dragon" in message.content:
-			t += getShadowlogMessage(data, "Dragon") + "\n```"
+			await sendShadowlogMessage(message, data, "Dragon") + "\n```"
 		elif " forest" in message.content:
-			t += getShadowlogMessage(data, "Forest") + "\n```"
+			await sendShadowlogMessage(message, data, "Forest") + "\n```"
 		elif " shadow" in message.content:
-			t += getShadowlogMessage(data, "Shadow") + "\n```"
+			await sendShadowlogMessage(message, data, "Shadow") + "\n```"
 		else:
-			t += getShadowlogMessage(data) + "```"
-		await client.send_message(message.channel, t)
+			await sendShadowlogMessage(message, data)
 
 	elif message.content.startswith("Who's the best shadowverse player"):
-		await client.send_message(message.channel, "Why " + os.environ.get("BEST_PLAYER") + " of course <:smug:302980339444350976>")
+		await sendEmbed(message.channel, desc="Why " + os.environ.get("BEST_PLAYER") + " of course <:smug:302980339444350976>")
 		
 	elif message.content.startswith(">8ball "):
-		randomNumber = randint(0, 19)
-		await client.send_message(message.channel, eightBall[randomNumber])
+		await sendEmbed(message.channel, desc=choice(eightBall))
 
-def getShadowlogMessage(data, target=""):
+def getSoup(link):
+	uClient = uRequest.urlopen(link)
+	sauce = uClient.read()
+	uClient.close()
+	return bs.BeautifulSoup(sauce, 'html.parser')
+
+def sendEmbed(channel, desc="", mainTitle="", fTitles=None, fDesc=None, footer=False):
+	embed = discord.Embed(title=mainTitle, colour=discord.Colour(0xe21433), 
+			description=desc)
+
+	if fTitles != None and fDesc != None:
+		for i in range(len(fTitles)):
+			embed.add_field(name=fTitles[i], value=fDesc[i])
+
+	if footer:
+		embed.set_footer(text="Bot made by PancakeReaper", icon_url="https://i.imgur.com/8jy3d5T.png")
+	return client.send_message(channel, "", embed=embed)
+
+def sendShadowlogMessage(message, data, target=""):
+	classNames = []
+	classStats = []
 	if target != "":
 		for row in data:
 			if translate[row[0]] == target:
-				return target + " has a playrate of " + row[1] + " at a winrate of " + row[4] + " (" + row[5] + " first, " + row[6] + " second)\n"
-	s = ""
-	for row in data:
-		s += translate[row[0]] + " has a playrate of " + row[1] + " at a winrate of " + row[4] + " (" + row[5] + " first, " + row[6] + " second)\n"
-	return s
+				classNames.append(translate[row[0]])
+				classStats.append("Playrate: " + row[1] + "\nRecorded games: " + row[2] + "\nOverall Winrate: " + row[4] + 
+					"\nWhen going 1st: " + row[5] + "\nWhen going 2nd: " + row[6])
+	else:
+		for row in data:
+			classNames.append(translate[row[0]])
+			classStats.append("Playrate: " + row[1] + "\nRecorded games: " + row[2] + "\nOverall Winrate: " + row[4] + 
+				"\nWhen going 1st: " + row[5] + "\nWhen going 2nd: " + row[6])
+	return sendEmbed(message.channel, fTitles=classNames, fDesc=classStats, footer=True)
 
 client.run(os.environ.get("BOT_TOKEN"))
