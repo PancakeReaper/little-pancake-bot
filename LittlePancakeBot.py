@@ -33,7 +33,7 @@ async def on_member_join(member):
 	
 @client.event
 async def on_member_remove(member):
-	await sendEmbed(member.server.default_channel, str(member.name) + " has left the server <:thesaddest:357950212096131072>")
+	await sendEmbed(client.get_channel("302978342158860288"), str(member.name) + " has left the server <:thesaddest:357950212096131072>")
 
 @client.event
 async def on_message(message):
@@ -164,6 +164,22 @@ async def on_message(message):
 		
 	elif message.content.startswith(">8ball "):
 		await sendEmbed(message.channel, desc=choice(eightBall))
+
+	elif message.content.startswith(">waifu "):
+		if(message.channel.nsfw == False):
+			await sendEmbed(message.channel, desc="This command is only available in Tejjy's hardrive. Try >safewaifu instead.")
+			return
+		search = message.content[7:]
+		if(search == "" or search == " "):
+			search = "all"
+		else:
+			search.replace(" ", "+")
+		soupPage = getSoup("https://gelbooru.com/index.php?page=post&s=list&tages=" + search)
+		thumbnails = soupPage.getAll("div", class_="thumbnail-preview")
+		tn = choice(thumbnails)
+		picLink = getSoup(tn.find('a')['href'])
+		link = picLink.find("img", id="image")["src"]
+		await sendEmbed(message.channel, link)
 
 def getSoup(link):
 	uClient = uRequest.urlopen(link)
