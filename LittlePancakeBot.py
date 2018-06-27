@@ -165,8 +165,8 @@ async def on_message(message):
 	elif message.content.startswith(">8ball "):
 		await sendEmbed(message.channel, desc=choice(eightBall))
 
-	elif message.content.startswith(">waifu "):
-		if(message.channel.is_nsfw() == False):
+	elif message.content.startswith(">waifu"):
+		if(message.channel.id != "308414503098384397" and message.channel.id != "439915182291156992"):
 			await sendEmbed(message.channel, desc="This command is only available in Tejjy's hardrive. Try >safewaifu instead.")
 			return
 		search = message.content[7:]
