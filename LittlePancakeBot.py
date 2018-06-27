@@ -174,7 +174,7 @@ async def on_message(message):
 			search = "all"
 		else:
 			search.replace(" ", "+")
-		soupPage = getSoup("https://gelbooru.com/index.php?page=post&s=list&tages=" + search)
+		soupPage = getSoup("https://gelbooru.com/index.php?page=post&s=list&tags=" + search)
 		thumbnails = soupPage.getAll("div", class_="thumbnail-preview")
 		tn = choice(thumbnails)
 		picLink = getSoup(tn.find('a')['href'])
