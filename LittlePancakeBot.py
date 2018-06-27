@@ -165,19 +165,6 @@ async def on_message(message):
 	elif message.content.startswith(">8ball "):
 		await sendEmbed(message.channel, desc=choice(eightBall))
 
-	elif message.content.startswith(">waifu"):
-		if(message.channel.id != "308414503098384397" and message.channel.id != "439915182291156992"):
-			await sendEmbed(message.channel, desc="This command is only available in Tejjy's hardrive. Try >safewaifu instead.")
-			return
-		search = message.content[7:]
-		search.replace(" ", "+")
-		soupPage = getSoup("https://gelbooru.com/index.php?page=post&s=list&tags=" + search)
-		thumbnails = soupPage.getAll("div", class_="thumbnail-preview")
-		tn = choice(thumbnails)
-		picLink = getSoup(tn.find('a')['href'])
-		link = picLink.find("img", id="image")["src"]
-		await sendEmbed(message.channel, link)
-
 def getSoup(link):
 	uClient = uRequest.urlopen(link)
 	sauce = uClient.read()
