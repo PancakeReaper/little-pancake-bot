@@ -170,10 +170,7 @@ async def on_message(message):
 			await sendEmbed(message.channel, desc="This command is only available in Tejjy's hardrive. Try >safewaifu instead.")
 			return
 		search = message.content[7:]
-		if(search == "" or search == " "):
-			search = "all"
-		else:
-			search.replace(" ", "+")
+		search.replace(" ", "+")
 		soupPage = getSoup("https://gelbooru.com/index.php?page=post&s=list&tags=" + search)
 		thumbnails = soupPage.getAll("div", class_="thumbnail-preview")
 		tn = choice(thumbnails)
