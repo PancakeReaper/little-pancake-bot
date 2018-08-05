@@ -125,7 +125,13 @@ async def on_message(message):
 		if "unlimited" in message.content:
 			r = ""
 		week = int(time.strftime("%W", time.gmtime()))-1
-		soup_page = getSoup("https://shadowlog.com/trend/2018/" + str(week) + "/4/" + r)
+		soup_page = getSoup("https://shadowlog.com/trend/2018/" + str(week+1) + "/4/" + r)
+
+		if(soup_page.find("div", class_="date-priod") == None):
+			soup_page = getSoup("https://shadowlog.com/trend/2018/" + str(week) + "/4/" + r)
+
+		title = soup_page.find("div", class_="date-priod").text
+		title = "Data collected from " + title[5:16] + " - " + title[19:30]
 
 		data = []
 		table = soup_page.find("table", id="table1")
@@ -141,23 +147,23 @@ async def on_message(message):
 			i+=1
 
 		if " sword" in message.content:
-			await sendShadowlogMessage(message, data, "Sword") + "\n```"
+			await sendShadowlogMessage(message, data, title, "Sword") + "\n```"
 		elif " rune" in message.content:
-			await sendShadowlogMessage(message, data, "Rune") + "\n```"
+			await sendShadowlogMessage(message, data, title, "Rune") + "\n```"
 		elif " portal" in message.content:
-			await sendShadowlogMessage(message, data, "Portal") + "\n```"
+			await sendShadowlogMessage(message, data, title, "Portal") + "\n```"
 		elif " haven" in message.content:
-			await sendShadowlogMessage(message, data, "Haven") + "\n```"
+			await sendShadowlogMessage(message, data, title, "Haven") + "\n```"
 		elif " blood" in message.content:
-			await sendShadowlogMessage(message, data, "Blood") + "\n```"
+			await sendShadowlogMessage(message, data, title, "Blood") + "\n```"
 		elif " dragon" in message.content:
-			await sendShadowlogMessage(message, data, "Dragon") + "\n```"
+			await sendShadowlogMessage(message, data, title, "Dragon") + "\n```"
 		elif " forest" in message.content:
-			await sendShadowlogMessage(message, data, "Forest") + "\n```"
+			await sendShadowlogMessage(message, data, title, "Forest") + "\n```"
 		elif " shadow" in message.content:
-			await sendShadowlogMessage(message, data, "Shadow") + "\n```"
+			await sendShadowlogMessage(message, data, title, "Shadow") + "\n```"
 		else:
-			await sendShadowlogMessage(message, data)
+			await sendShadowlogMessage(message, data, title)
 
 	elif message.content.startswith("Who's the best shadowverse player"):
 		await sendEmbed(message.channel, desc="Why " + os.environ.get("BEST_PLAYER") + " of course <:smug:302980339444350976>")
@@ -183,7 +189,7 @@ def sendEmbed(channel, desc="", mainTitle="", fTitles=None, fDesc=None, footer=F
 		embed.set_footer(text="Bot made by PancakeReaper", icon_url="https://i.imgur.com/8jy3d5T.png")
 	return client.send_message(channel, "", embed=embed)
 
-def sendShadowlogMessage(message, data, target=""):
+def sendShadowlogMessage(message, data, title, target=""):
 	classNames = []
 	classStats = []
 	if target != "":
@@ -197,6 +203,6 @@ def sendShadowlogMessage(message, data, target=""):
 			classNames.append(translate[row[0]])
 			classStats.append("Playrate: " + row[1] + "\nRecorded games: " + row[2] + "\nOverall Winrate: " + row[4] + 
 				"\nWhen going 1st: " + row[5] + "\nWhen going 2nd: " + row[6])
-	return sendEmbed(message.channel, fTitles=classNames, fDesc=classStats, footer=True)
+	return sendEmbed(message.channel, mainTitle=title, fTitles=classNames, fDesc=classStats, footer=True)
 
 client.run(os.environ.get("BOT_TOKEN"))
