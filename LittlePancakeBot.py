@@ -30,10 +30,12 @@ async def on_ready():
 @client.event
 async def on_member_join(member):
 	await sendEmbed(member.server.default_channel, "Welcome, " + str(member.name) + " <:yayshark:327870025878732800>")
-	
+
+'''
 @client.event
 async def on_member_remove(member):
 	await sendEmbed(client.get_channel("302978342158860288"), str(member.name) + " has left the server <:thesaddest:357950212096131072>")
+'''
 
 @client.event
 async def on_message(message):
