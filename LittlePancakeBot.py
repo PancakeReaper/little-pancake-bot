@@ -121,49 +121,24 @@ async def on_message(message):
 			await client.send_message(message.channel, manga['href'])
 
 	elif message.content.startswith(">shadowlog"):
-		r = "r"
-		if "unlimited" in message.content:
-			r = ""
-		week = int(time.strftime("%W", time.gmtime()))-1
-		soup_page = getSoup("https://shadowlog.com/trend/2018/" + str(week+1) + "/4/" + r)
-
-		if(soup_page.find("div", class_="date-priod") == None):
-			soup_page = getSoup("https://shadowlog.com/trend/2018/" + str(week) + "/4/" + r)
-
-		title = soup_page.find("div", class_="date-priod").text
-		title = "Data collected from " + title[5:16] + " - " + title[19:30]
-
-		data = []
-		table = soup_page.find("table", id="table1")
-		table_body = table.find("tbody")
-
-		rows = table_body.findAll("tr")
-		i = 0
-		for row in rows:
-			data.append([])
-			cols = row.findAll("td")
-			for col in cols:
-				data[i].append(col.text)
-			i+=1
-
 		if " sword" in message.content:
-			await sendShadowlogMessage(message, data, title, "Sword") + "\n```"
+			await classShadowlogMessage(message, "Sword", "2")
 		elif " rune" in message.content:
-			await sendShadowlogMessage(message, data, title, "Rune") + "\n```"
+			await classShadowlogMessage(message, "Rune", "5")
 		elif " portal" in message.content:
-			await sendShadowlogMessage(message, data, title, "Portal") + "\n```"
+			await classShadowlogMessage(message, "Portal", "8")
 		elif " haven" in message.content:
-			await sendShadowlogMessage(message, data, title, "Haven") + "\n```"
+			await classShadowlogMessage(message, "Haven", "7")
 		elif " blood" in message.content:
-			await sendShadowlogMessage(message, data, title, "Blood") + "\n```"
+			await classShadowlogMessage(message, "Blood", "6")
 		elif " dragon" in message.content:
-			await sendShadowlogMessage(message, data, title, "Dragon") + "\n```"
+			await classShadowlogMessage(message, "Dragon", "3")
 		elif " forest" in message.content:
-			await sendShadowlogMessage(message, data, title, "Forest") + "\n```"
+			await classShadowlogMessage(message, "Forest", "1")
 		elif " shadow" in message.content:
-			await sendShadowlogMessage(message, data, title, "Shadow") + "\n```"
+			await classShadowlogMessage(message, "Shadow", "4")
 		else:
-			await sendShadowlogMessage(message, data, title)
+			await classShadowlogMessage(message)
 
 	elif message.content.startswith("Who's the best shadowverse player"):
 		await sendEmbed(message.channel, desc="Why " + os.environ.get("BEST_PLAYER") + " of course <:smug:302980339444350976>")
@@ -188,21 +163,45 @@ def sendEmbed(channel, desc="", mainTitle="", fTitles=None, fDesc=None, footer=F
 	if footer:
 		embed.set_footer(text="Bot made by PancakeReaper", icon_url="https://i.imgur.com/8jy3d5T.png")
 	return client.send_message(channel, "", embed=embed)
+	
+def classShadowlogMessage(message, name="", class_="", table=1):
+	r = "r"
+	if "unlimited" in message.content:
+		r = ""
+	week = int(time.strftime("%W", time.gmtime()))-1
+	soup_page = getSoup("https://shadowlog.com/trend/2018/" + str(week+1) + "/4/" + class_ + r)
 
-def sendShadowlogMessage(message, data, title, target=""):
+	if(soup_page.find("div", class_="date-priod") == None):
+		soup_page = getSoup("https://shadowlog.com/trend/2018/" + str(week) + "/4/" + class_ + r)
+
+	title = soup_page.find("div", class_="date-priod").text
+	if name != "":
+		title = name + "'s matchup data, collected from " + title[5:16] + " - " + title[19:30]
+	else:
+		title = "General data, collected from " + title[5:16] + " - " + title[19:30]
+
+	data = []
+	table = soup_page.find("table", id="table1")
+	table_body = table.find("tbody")
+
+	rows = table_body.findAll("tr")
+	i = 0
+	for row in rows:
+		data.append([])
+		cols = row.findAll("td")
+		for col in cols:
+			data[i].append(col.text)
+		i+=1
+
 	classNames = []
 	classStats = []
-	if target != "":
-		for row in data:
-			if translate[row[0]] == target:
-				classNames.append(translate[row[0]])
-				classStats.append("Playrate: " + row[1] + "\nRecorded games: " + row[2] + "\nOverall Winrate: " + row[4] + 
-					"\nWhen going 1st: " + row[5] + "\nWhen going 2nd: " + row[6])
-	else:
-		for row in data:
+	for row in data:
+		if name == "":
 			classNames.append(translate[row[0]])
-			classStats.append("Playrate: " + row[1] + "\nRecorded games: " + row[2] + "\nOverall Winrate: " + row[4] + 
-				"\nWhen going 1st: " + row[5] + "\nWhen going 2nd: " + row[6])
+		else:
+			classNames.append("vs" + translate[row[0][2:]])
+		classStats.append("Playrate: " + row[1] + "\nRecorded games: " + row[2] + "\nOverall Winrate: " + row[4] + 
+			"\nWhen going 1st: " + row[5] + "\nWhen going 2nd: " + row[6])
 	return sendEmbed(message.channel, mainTitle=title, fTitles=classNames, fDesc=classStats, footer=True)
 
 client.run(os.environ.get("BOT_TOKEN"))
