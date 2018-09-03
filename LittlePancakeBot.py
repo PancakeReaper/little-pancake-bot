@@ -9,6 +9,12 @@ import time
 import bs4 as bs
 from urllib import request as uRequest
 
+# Resolving an issue with verifying SSL CERTIFICATES
+import ssl
+if (not os.environ.get('PYTHONHTTPSVERIFY', '') and
+    getattr(ssl, '_create_unverified_context', None)): 
+    ssl._create_default_https_context = ssl._create_unverified_context
+
 translate = {"ロイヤル":"Sword", "ウィッチ":"Rune", "ネメシス":"Portal", "ビショップ":"Haven", 
 			 "ヴァンパイア":"Blood", "ドラゴン":"Dragon", "エルフ":"Forest", "ネクロマンサー":"Shadow"}
 
