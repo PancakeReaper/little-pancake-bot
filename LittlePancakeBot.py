@@ -27,13 +27,12 @@ reminders = []
 async def reminderHandler():
 	while True:
 		await asyncio.sleep(50)
-		print('checking reminders...')
 		for r in range(len(reminders) - 1, -1, -1):
 			print(reminders[r][0] + "|" + time.strftime("%d-%H:%M", time.gmtime()))
 			if reminders[r][0] == time.strftime("%d-%H:%M", time.gmtime()):
 				print("Reminder at " + reminders[r][0] + " excecuted.")
 				print(" Message: " + reminders[r][1])
-				await client.send_message(client.get_channel("143879568317612032"), "@everyone Reminder! " + reminders[r][1])
+				await client.send_message(client.get_channel("303248776506769409"), "@everyone Reminder! " + reminders[r][1])
 				del reminders[r]
 
 client = discord.Client()
@@ -183,22 +182,20 @@ async def on_message(message):
 		await sendEmbed(message.channel, desc=choice(eightBall))
 
 	elif message.content.startswith(">remind "):
-		print('something')
-		try:
-			print('trying')
-			if isValidTime(message.content[8:]):
-				print('its valid!')
-				reminders.append([message.content[8:16], message.content[16:]])
-				sendEmbed(message.channel, desc="Reminder set for day " + 
-					message.content[8:10] + " at " + message.content[11:16])
-				print('reminder made!')
-			else:
-				print('not valid!')
-				raise
-		except:
-			print('exception risen!')
-			sendEmbed(message.channel, desc="Sorry! Looks like something went wrong while trying to set up the reminder.")
-
+		# Only members can call this command
+		if "members" in [y.name.lower for y in message.author.roles]
+			try:
+				if isValidTime(message.content[8:]):
+					reminders.append([message.content[8:16], message.content[16:]])
+					sendEmbed(message.channel, desc="Reminder set for day " + 
+						message.content[8:10] + " at " + message.content[11:16])
+				else:
+					raise
+			except:
+				sendEmbed(message.channel, desc="Sorry! Looks like something went wrong while trying to set up the reminder.")
+		else:
+			sendEmbed(message.channel, desc="Uh oh! It doesn't look like you're a member. You need to be a member to use this command.)
+				
 def isValidTime(msg):
 	try: 
 		day = int(msg[:2])
