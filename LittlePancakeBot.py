@@ -194,7 +194,7 @@ async def on_message(message):
 			except:
 				sendEmbed(message.channel, desc="Sorry! Looks like something went wrong while trying to set up the reminder.")
 		else:
-			sendEmbed(message.channel, desc="Uh oh! It doesn't look like you're a member. You need to be a member to use this command.)
+			sendEmbed(message.channel, desc="Uh oh! It doesn't look like you're a member. You need to be a member to use this command.")
 				
 def isValidTime(msg):
 	try: 
