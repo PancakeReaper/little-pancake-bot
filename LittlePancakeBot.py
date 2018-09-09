@@ -27,6 +27,7 @@ reminders = []
 async def reminderHandler():
 	while True:
 		await asyncio.sleep(50)
+		print("checking reminders...")
 		for r in range(len(reminders) - 1, -1, -1):
 			print(reminders[r][0] + "|" + time.strftime("%d-%H:%M", time.gmtime()))
 			if reminders[r][0] == time.strftime("%d-%H:%M", time.gmtime()):
@@ -199,6 +200,7 @@ async def on_message(message):
 				
 def isValidTime(msg):
 	try: 
+		print(msg)
 		day = int(msg[:2])
 		if day < 0 or day > 31:
 			raise
@@ -210,8 +212,10 @@ def isValidTime(msg):
 			raise
 		if mn < 0 or mn > 60:
 			raise
+		print("its valid")
 		return True
 	except:
+		print("not valid")
 		return False
 
 def getSoup(link):
