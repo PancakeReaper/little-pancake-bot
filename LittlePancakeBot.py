@@ -183,7 +183,8 @@ async def on_message(message):
 
 	elif message.content.startswith(">remind "):
 		# Only members can call this command
-		if "members" in [y.name.lower for y in message.author.roles]:
+		print([y.name.lower() for y in message.author.roles])
+		if "members" in [y.name.lower() for y in message.author.roles]:
 			try:
 				if isValidTime(message.content[8:]):
 					reminders.append([message.content[8:16], message.content[16:]])
