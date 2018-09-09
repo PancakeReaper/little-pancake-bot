@@ -27,7 +27,6 @@ reminders = []
 async def reminderHandler():
 	while True:
 		await asyncio.sleep(50)
-		print("checking reminders...")
 		for r in range(len(reminders) - 1, -1, -1):
 			print(reminders[r][0] + "|" + time.strftime("%d-%H:%M", time.gmtime()))
 			if reminders[r][0] == time.strftime("%d-%H:%M", time.gmtime()):
@@ -184,23 +183,21 @@ async def on_message(message):
 
 	elif message.content.startswith(">remind "):
 		# Only members can call this command
-		print([y.name.lower() for y in message.author.roles])
 		if "members" in [y.name.lower() for y in message.author.roles]:
 			try:
 				if isValidTime(message.content[8:]):
 					reminders.append([message.content[8:16], message.content[16:]])
-					sendEmbed(message.channel, desc="Reminder set for day " + 
+					await sendEmbed(message.channel, desc="Reminder set for day " + 
 						message.content[8:10] + " at " + message.content[11:16])
 				else:
 					raise
 			except:
-				sendEmbed(message.channel, desc="Sorry! Looks like something went wrong while trying to set up the reminder.")
+				await sendEmbed(message.channel, desc="Sorry! Looks like something went wrong while trying to set up the reminder.")
 		else:
-			sendEmbed(message.channel, desc="Uh oh! It doesn't look like you're a member. You need to be a member to use this command.")
+			await sendEmbed(message.channel, desc="Uh oh! It doesn't look like you're a member. You need to be a member to use this command.")
 				
 def isValidTime(msg):
 	try: 
-		print(msg)
 		day = int(msg[:2])
 		if day < 0 or day > 31:
 			raise
@@ -212,10 +209,8 @@ def isValidTime(msg):
 			raise
 		if mn < 0 or mn > 60:
 			raise
-		print("its valid")
 		return True
 	except:
-		print("not valid")
 		return False
 
 def getSoup(link):
