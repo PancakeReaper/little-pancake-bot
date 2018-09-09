@@ -28,7 +28,6 @@ async def reminderHandler():
 	while True:
 		await asyncio.sleep(50)
 		for r in range(len(reminders) - 1, -1, -1):
-			print(reminders[r][0] + "|" + time.strftime("%d-%H:%M", time.gmtime()))
 			if reminders[r][0] == time.strftime("%d-%H:%M", time.gmtime()):
 				print("Reminder at " + reminders[r][0] + " excecuted.")
 				print(" Message: " + reminders[r][1])
