@@ -238,7 +238,7 @@ def classShadowlogMessage(message, name="", class_="", table=1):
 	soup_page = getSoup("https://shadowlog.com/trend/2018/" + str(week+1) + "/4/" + class_ + r)
 
 	if(soup_page.find("div", class_="date-priod") == None):
-		soup_page = getSoup("https://shadowlog.com/trend/2018/" + str(week) + "/4/" + class_ + r)
+		soup_page = getSoup("https://shadowlog.com/trend/2019/" + str(week) + "/4/" + class_ + r)
 
 	title = soup_page.find("div", class_="date-priod").text
 	if name != "":
